@@ -1,0 +1,34 @@
+name: hola.ai CI
+
+on:
+  push:
+    branches: [ main, master, jules-* ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install Dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build All Workspace Packages
+        run: pnpm run build
+
+      - name: Run Unit & Integration Tests
+        run: pnpm run test
